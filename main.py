@@ -1,35 +1,20 @@
-from dotenv import load_dotenv
-load_dotenv()
-
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from models import db, User, CompletedTask
-import random
-import string
+from flask_sqlalchemy import SQLAlchemy
 import os
 import json
 import requests
-import logging
-from logging.handlers import RotatingFileHandler
+from dotenv import load_dotenv
 
-# Настройка логирования
-handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
-handler.setFormatter(logging.Formatter(
-    '%(asctime)s - %(levelname)s - %(message)s'
-))
-
-logger = logging.getLogger('telegram_bot')
-logger.setLevel(logging.INFO)
-logger.addHandler(handler)
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Конфигурация
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///telegram_mini_app.db'
+# Конфигурация базы данных
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///telegram_mini_app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', '5db67baa53f55b6ba362aa91aaa06a81')
-
+db = SQLAlchemy(app)
 # Инициализация базы данных
 db.init_app(app)
 
@@ -218,7 +203,5 @@ def generate_referral_code():
             return code
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    port = int(os.getenv('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    port = int(os.getenv('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
