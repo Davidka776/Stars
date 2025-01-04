@@ -262,3 +262,14 @@ document.addEventListener('DOMContentLoaded', function() {
     window.loadTasks();
     navButtons[0].classList.add('active');
 });
+
+// Добавьте функцию для показа страницы рефералов
+function showReferrals() {
+    document.getElementById('content').innerHTML = '';
+    fetch('templates/referrals.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('content').innerHTML = html;
+            loadReferralInfo();
+        });
+}

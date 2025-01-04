@@ -5,6 +5,9 @@ import os
 import json
 import requests
 from dotenv import load_dotenv
+import string
+import random
+from datetime import datetime
 
 load_dotenv()
 
@@ -24,6 +27,9 @@ class User(db.Model):
     first_name = db.Column(db.String(80))
     balance = db.Column(db.Integer, default=0)
     total_earned = db.Column(db.Integer, default=0)
+    referral_code = db.Column(db.String(10), unique=True)
+    referred_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    referral_earnings = db.Column(db.Integer, default=0)
 
 class CompletedTask(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -67,6 +73,14 @@ def load_tasks():
     except Exception as e:
         print(f"Ошибка при загрузке заданий: {e}")
         return []
+
+# Функция для генерации реферального кода
+def generate_referral_code():
+    chars = string.ascii_letters + string.digits
+    while True:
+        code = ''.join(random.choices(chars, k=8))
+        if not User.query.filter_by(referral_code=code).first():
+            return code
 
 @app.route('/')
 def index():
@@ -186,6 +200,47 @@ def get_completed_tasks():
     except Exception as e:
         print(f"Ошибка при получении выполненных заданий: {str(e)}")
         return jsonify([])
+
+# Роут для получения реферальной информации
+@app.route('/api/referral/info', methods=['GET'])
+def get_referral_info():
+    try:
+        user_id = request.args.get('user_id', type=int)
+        if not user_id:
+            return jsonify({'error': 'User ID required'}), 400
+
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        # Если у пользователя нет реферального кода, создаем его
+        if not user.referral_code:
+            user.referral_code = generate_referral_code()
+            db.session.commit()
+
+        # Получаем список рефералов
+        referrals = ReferralReward.query.filter_by(referrer_id=user_id).all()
+        referral_list = []
+        
+        for ref in referrals:
+            referred_user = User.query.get(ref.referred_id)
+            if referred_user:
+                referral_list.append({
+                    'username': referred_user.username or 'Пользователь',
+                    'amount': ref.amount,
+                    'date': ref.created_at.strftime('%d.%m.%Y')
+                })
+
+        return jsonify({
+            'referral_code': user.referral_code,
+            'referral_link': f"https://t.me/your_bot_username?start={user.referral_code}",
+            'total_earnings': user.referral_earnings,
+            'referrals': referral_list
+        })
+
+    except Exception as e:
+        print(f"Error in get_referral_info: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8000))
