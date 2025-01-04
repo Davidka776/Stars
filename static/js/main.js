@@ -265,11 +265,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Добавьте функцию для показа страницы рефералов
 function showReferrals() {
-    document.getElementById('content').innerHTML = '';
-    fetch('templates/referrals.html')
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('content').innerHTML = html;
-            loadReferralInfo();
-        });
+    // Скрываем все секции
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Показываем секцию рефералов
+    document.getElementById('referralsSection').style.display = 'block';
+    
+    // Загружаем информацию о рефералах
+    loadReferralInfo();
+}
+
+// В начале файла добавьте функцию для копирования ссылки
+function copyLink() {
+    const linkInput = document.getElementById('referralLink');
+    linkInput.select();
+    document.execCommand('copy');
+    
+    // Показываем уведомление
+    alert('Ссылка скопирована!');
 }

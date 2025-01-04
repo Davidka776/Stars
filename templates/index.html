@@ -31,11 +31,41 @@
                 <span class="icon">👤</span>
                 <span>wallet</span>
             </button>
-            <div class="nav-item" onclick="showReferrals()">
-                <i class="fas fa-users"></i>
-                <span>Рефералы</span>
+            <div class="nav-container">
+                <div class="nav-item active" onclick="showTasks()">
+                    <i class="fas fa-tasks"></i>
+                    <span>Задания</span>
+                </div>
+                <div class="nav-item" onclick="showReferrals()">
+                    <i class="fas fa-users"></i>
+                    <span>Рефералы</span>
+                </div>
             </div>
         </nav>
+    </div>
+    <div id="referralsSection" class="content-section" style="display: none;">
+        <div class="referral-container">
+            <div class="referral-info">
+                <h2>Реферальная система</h2>
+                <div class="referral-link-box">
+                    <p>Ваша реферальная ссылка:</p>
+                    <div class="link-container">
+                        <input type="text" id="referralLink" readonly>
+                        <button onclick="copyLink()">Копировать</button>
+                    </div>
+                </div>
+                <div class="referral-stats">
+                    <p>Всего заработано: <span id="totalEarnings">0</span> звезд</p>
+                </div>
+            </div>
+            
+            <div class="referrals-list">
+                <h3>Приглашенные пользователи</h3>
+                <div id="referralsList">
+                    <!-- Список будет заполнен через JavaScript -->
+                </div>
+            </div>
+        </div>
     </div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
