@@ -19,7 +19,7 @@
                 <span class="icon">📝</span>
                 <span>Tasks</span>
             </button>
-            <button class="nav-btn" data-page="ref">
+            <button class="nav-btn" data-page="ref" onclick="showReferrals()">
                 <span class="icon">👥</span>
                 <span>Ref</span>
             </button>
@@ -68,5 +68,6 @@
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/referrals.js') }}"></script>
 </body>
 </html>
