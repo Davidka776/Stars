@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <link rel="icon" href="data:,">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div id="content">
+            <!-- Здесь будет контент для каждой вкладки -->
+        </div>
+        
+        <nav class="bottom-nav">
+            <button class="nav-btn" data-page="tasks">
+                <span class="icon">📝</span>
+                <span>Задания</span>
+            </button>
+            <button class="nav-btn" data-page="ref">
+                <span class="icon">👥</span>
+                <span>Рефералы</span>
+            </button>
+            <button class="nav-btn" data-page="fortune">
+                <span class="icon">🎡</span>
+                <span>Фортуна</span>
+            </button>
+            <button class="nav-btn" data-page="profile">
+                <span class="icon">👤</span>
+                <span>Профиль</span>
+            </button>
+        </nav>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

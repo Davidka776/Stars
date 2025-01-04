@@ -1,0 +1,11 @@
+{
+    "tasks": [
+        {
+            "id": 1,
+            "channel_username": "FreePremGift",
+            "channel_title": "Розыгрыши тг Premium",
+            "reward": 200,
+            "is_active": true
+        }
+    ]
+} 
