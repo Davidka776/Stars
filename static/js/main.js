@@ -68,6 +68,38 @@ function copyLink() {
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
+    // Обработчики для кнопок навигации
+    document.querySelectorAll('.nav-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const page = this.dataset.page;
+            
+            // Убираем активный класс со всех кнопок
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Добавляем активный класс нажатой кнопке
+            this.classList.add('active');
+            
+            // Скрываем все секции
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Показываем нужную секцию
+            if (page === 'tasks') {
+                document.getElementById('tasksSection').style.display = 'block';
+                loadTasks();
+            } else if (page === 'ref') {
+                document.getElementById('referralsSection').style.display = 'block';
+                loadReferralInfo();
+            }
+        });
+    });
+    
+    // Показываем задания по умолчанию
+    document.querySelector('[data-page="tasks"]').click();
+    
     // Инициализация Telegram WebApp
     const tg = window.Telegram.WebApp;
     tg.ready();
